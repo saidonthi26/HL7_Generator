@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# HL7 Generator – JSON to HL7 v2 Converter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a **full-stack application** that converts **patient data in JSON format** into **HL7 v2 (ADT_A01) messages**.
 
-## Available Scripts
+It is built as a **learning and proof-of-concept (POC) project** to understand HL7 v2 structure, mandatory vs optional field handling, and frontend–backend integration.
 
-In the project directory, you can run:
+## What This Application Does
 
-### `npm start`
+- Accepts **patient JSON input**
+- Validates **mandatory fields**
+- Ignores **case sensitivity** in JSON keys
+- Generates a valid **HL7 v2 message**
+- Skips missing optional fields using empty HL7 separators (`||`)
+- Displays HL7 output in a **simple medical / hospital-themed UI**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Backend
+- Node.js
+- Express.js
+- REST API
+- Manual HL7 v2 message generation
 
-### `npm test`
+### Frontend
+- React (Create React App)
+- Fetch API
+- Simple medical-themed UI
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Structure
 
-### `npm run build`
+HL7_Generator/
+├── backend/
+│ ├── index.js
+│ ├── hl7/
+│ ├── validation/
+│ ├── package.json
+│ └── .gitignore
+│
+├── frontend/
+│ ├── src/
+│ ├── public/
+│ ├── package.json
+│ └── .gitignore
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Note**
+- There is **no root `.gitignore`**
+- `frontend` and `backend` each maintain their own `.gitignore`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Input JSON Rules
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Mandatory Fields (Case-Insensitive)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The following fields **must be present** in the JSON input:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `patientId`
+- `name`
+- `age`
+- `gender`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Valid examples:
+{
+  "PatientID": "P1001",
+  "Name": "Ravi Kumar",
+  "Age": 30,
+  "Gender": "M"
+}
+{
+  "patientid": "P1002",
+  "name": "Anita Sharma",
+  "age": 28,
+  "gender": "F"
+}
 
-## Learn More
+## Sample HL7 Output
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+MSH|^~\&|NODEAPP|HOSP|HL7SYS|HOSP|20260115||ADT^A01|MSG001|P|2.3
+PID|1||P1001||Ravi Kumar|30|M|||||
+PV1|1|O
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Run Backend Steps 
 
-### Code Splitting
+cd backend
+npm install
+node index.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+ - runs on : http://localhost:3000
+ 
+## Runn Frontend 
 
-### Analyzing the Bundle Size
+cd frontend
+npm install
+npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+ - runs on : http://localhost:3001
 
-### Making a Progressive Web App
+## Test API (POSTMAN)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Method : POST
 
-### Advanced Configuration
+http://localhost:3000/convert
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Body(JSON)
 
-### Deployment
+{
+  "PatientID": "P1001",
+  "Name": "Ravi Kumar",
+  "Age": 30,
+  "Gender": "M"
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Key Decisions 
 
-### `npm run build` fails to minify
+- HL7 v2 formatting is respected
+- Empty fields (||) are preferred over placeholders like UNKNOWN
+- Case insensitive JSON key handling
+- Frontend and backend are maintained in a single Git repository
+- Separate .gitignore files for frontend and backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Notes
+- node_modules folders are ignored using local .gitignore files
+- No HL7 libraries are used HL7 messages are generated manually
+- Focus is on clarity and correctness, not complexity
+
+## Author
+
+**This is Application is developed by Sai Donthi, Mail: saidonthi40@gmail.com** 
